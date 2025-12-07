@@ -33,4 +33,7 @@ export interface Project {
   pushedAt?: string
   featured?: boolean
   repoName?: string
+  features?: string[]
+  techStack?: string[]
+  hasLiveDemo?: boolean
 }

@@ -76,6 +76,38 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                 </p>
               </div>
 
+              {project.features && project.features.length > 0 && (
+                <div className="bg-gradient-to-br from-accent/10 via-primary/5 to-transparent rounded-lg p-8 border border-border">
+                  <h3 className="text-lg font-semibold mb-4 text-foreground">Key Features</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {project.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <Star weight="fill" size={16} className="text-accent mt-1 flex-shrink-0" />
+                        <span className="text-card-foreground/90 text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {project.techStack && project.techStack.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-foreground">Tech Stack</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.techStack.map((tech) => (
+                      <Badge
+                        key={tech}
+                        variant="secondary"
+                        className="mono text-sm bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 px-4 py-2"
+                      >
+                        <Code size={14} className="mr-1" />
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {project.topics.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-4 text-foreground">Technologies & Topics</h3>
@@ -142,10 +174,28 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
               )}
 
               <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border">
+                {project.liveUrl && (
+                  <Button
+                    asChild
+                    size="lg"
+                    className="flex-1 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground font-semibold shadow-lg shadow-accent/30"
+                  >
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                      <Star weight="fill" size={20} className="mr-2" />
+                      Try Live Demo
+                      <ArrowUpRight size={18} className="ml-2" weight="bold" />
+                    </a>
+                  </Button>
+                )}
                 <Button
                   asChild
                   size="lg"
-                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                  variant={project.liveUrl ? "outline" : "default"}
+                  className={`flex-1 font-semibold ${
+                    project.liveUrl 
+                      ? 'border-primary/50 text-foreground hover:bg-primary/10' 
+                      : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+                  }`}
                 >
                   <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
                     <GitBranch size={20} className="mr-2" />
@@ -153,19 +203,6 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                     <ArrowUpRight size={16} className="ml-2" />
                   </a>
                 </Button>
-                {project.liveUrl && (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="flex-1 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-semibold"
-                  >
-                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                      Visit Live Site
-                      <ArrowUpRight size={16} className="ml-2" />
-                    </a>
-                  </Button>
-                )}
               </div>
             </div>
           </div>
