@@ -36,31 +36,68 @@ function App() {
         avatarUrl: userInfo.avatarUrl,
       })
 
-      const response = await fetch(`https://api.github.com/users/${userInfo.login}/repos?sort=updated&per_page=100`)
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch repositories')
-      }
+      // Featured repositories to showcase
+      const featuredRepos = [
+        'mini-diamond-hunt',
+        'diepio-style-rpg-gam',
+        'the-lantern-network',
+        'UnityAI_SceneBuilderTool',
+        'MovementController_PRO',
+        'gemini-gauntlet-v4',
+        'midi-alchemy',
+        'spirograph_pro'
+      ]
 
-      const repos: Repository[] = await response.json()
+      // Fetch each repository individually to get complete data
+      const repoPromises = featuredRepos.map(repoName =>
+        fetch(`https://api.github.com/repos/${userInfo.login}/${repoName}`)
+          .then(res => res.ok ? res.json() : null)
+          .catch(err => {
+            console.warn(`Failed to fetch ${repoName}:`, err)
+            return null
+          })
+      )
+
+      const repos = (await Promise.all(repoPromises)).filter((repo): repo is Repository => repo !== null)
+      
+      if (repos.length === 0) {
+        toast.error('No repositories found. Check your GitHub connection.')
+        return
+      }
       
       const projectList: Project[] = repos
-        .filter(repo => !repo.fork && !repo.archived)
-        .map(repo => ({
-          id: repo.id,
-          title: repo.name.replace(/-/g, ' ').replace(/_/g, ' ').split(' ').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-          ).join(' '),
-          description: repo.description || '',
-          repoUrl: repo.html_url,
-          liveUrl: repo.homepage || undefined,
-          stars: repo.stargazers_count,
-          language: repo.language || undefined,
-          topics: repo.topics || [],
-          updatedAt: repo.updated_at,
-          featured: repo.stargazers_count >= 5,
-        }))
+        .map(repo => {
+          // Special handling for flagship project
+          const isFlagship = repo.name === 'UnityAI_SceneBuilderTool'
+          
+          return {
+            id: repo.id,
+            title: repo.name.replace(/-/g, ' ').replace(/_/g, ' ').split(' ').map(word => 
+              word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' '),
+            description: repo.description || 'An amazing project',
+            repoUrl: repo.html_url,
+            liveUrl: repo.homepage || undefined,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            language: repo.language || undefined,
+            topics: repo.topics || [],
+            createdAt: repo.created_at,
+            updatedAt: repo.updated_at,
+            pushedAt: repo.pushed_at,
+            featured: isFlagship || repo.stargazers_count >= 5,
+            repoName: repo.name,
+          }
+        })
         .sort((a, b) => {
+          // UnityAI_SceneBuilderTool always first
+          const aIsFlagship = a.title.toLowerCase().includes('unityai')
+          const bIsFlagship = b.title.toLowerCase().includes('unityai')
+          
+          if (aIsFlagship !== bIsFlagship) {
+            return aIsFlagship ? -1 : 1
+          }
+          
           if (a.featured !== b.featured) {
             return a.featured ? -1 : 1
           }
@@ -194,11 +231,33 @@ function App() {
         </div>
       </section>
 
-      <footer className="border-t border-border/50 py-12 px-6 md:px-12 text-center">
-        <p className="text-muted-foreground">
-          Built with passion • Powered by{' '}
-          <span className="text-primary font-semibold">Spark</span>
-        </p>
+      <footer className="border-t border-border/50 py-12 px-6 md:px-12">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <p className="text-muted-foreground">
+                Built with passion • Powered by{' '}
+                <span className="text-primary font-semibold">Spark</span>
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-2">
+                © {new Date().getFullYear()} kevinb42O. All rights reserved.
+              </p>
+            </div>
+            {user && (
+              <div className="flex items-center gap-4">
+                <a
+                  href={`https://github.com/${user.login}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Sparkle size={16} weight="fill" />
+                  <span className="text-sm font-medium">View on GitHub</span>
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
       </footer>
 
       <ProjectModal

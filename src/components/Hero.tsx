@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Sparkle, GithubLogo } from '@phosphor-icons/react'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { ParticleBackground } from '@/components/ParticleBackground'
 
 interface HeroProps {
   user: {
@@ -16,6 +17,7 @@ export function Hero({ user }: HeroProps) {
       <div className="absolute inset-0 mesh-background opacity-50" />
       
       <div className="absolute inset-0 overflow-hidden">
+        <ParticleBackground />
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
