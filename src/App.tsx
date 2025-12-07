@@ -6,7 +6,8 @@ import { ShaderBackground } from '@/components/ShaderBackground'
 import { BentoGrid, BentoCard } from '@/components/BentoGrid'
 import { BentoProjectCard } from '@/components/BentoProjectCard'
 import { VSCodeAbout } from '@/components/VSCodeAbout'
-import { projects } from '@/lib/projects'
+import { ProjectModal } from '@/components/ProjectModal'
+import { projects, ProjectData } from '@/lib/projects'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 
@@ -14,6 +15,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 function App() {
   const [user, setUser] = useState<{ login: string; avatarUrl: string } | null>(null)
   const [loading, setLoading] = useState(true)
+  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     fetchUser()
@@ -132,7 +135,8 @@ function App() {
                 <BentoProjectCard
                   project={project}
                   onClick={() => {
-                    // Click handled in BentoProjectCard
+                    setSelectedProject(project)
+                    setIsModalOpen(true)
                   }}
                 />
               </BentoCard>
@@ -170,6 +174,16 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Project Details Modal */}
+      <ProjectModal
+        project={selectedProject}
+        open={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false)
+          setSelectedProject(null)
+        }}
+      />
     </div>
   )
 }
