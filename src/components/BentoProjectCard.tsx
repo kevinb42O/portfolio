@@ -17,8 +17,9 @@ export function BentoProjectCard({ project, onClick }: BentoProjectCardProps) {
 
   useEffect(() => {
     if (isHovered && videoRef.current && project.videoUrl) {
-      videoRef.current.play().catch(err => {
-        console.log('Video autoplay failed:', err)
+      videoRef.current.play().catch(() => {
+        // Silently fall back to gradient background if autoplay is blocked
+        setVideoLoaded(false)
       })
     } else if (!isHovered && videoRef.current) {
       videoRef.current.pause()
@@ -90,6 +91,7 @@ export function BentoProjectCard({ project, onClick }: BentoProjectCardProps) {
                 playsInline
                 preload="none"
                 onLoadedData={() => setVideoLoaded(true)}
+                aria-hidden="true"
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                   isHovered && videoLoaded ? 'opacity-30' : 'opacity-0'
                 }`}

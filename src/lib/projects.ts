@@ -20,7 +20,7 @@ export const projects: ProjectData[] = [
     title: 'UnityAI Scene Builder Tool',
     description: 'Revolutionary AI-powered Unity tool that creates complete 3D game worlds in 8 seconds using natural language. Type "Create a fantasy world" and watch it build terrains, place objects, apply materials, and configure lighting automatically.',
     repoUrl: 'https://github.com/kevinb42O/UnityAI_SceneBuilderTool',
-    videoUrl: '/videos/unityai-demo.mp4', // Placeholder - user needs to add actual videos
+    // videoUrl: '/videos/unityai-demo.mp4', // Add video file to enable hover transition
     features: [
       '8-Second World Generation',
       'Natural Language Interface',
@@ -40,7 +40,7 @@ export const projects: ProjectData[] = [
     description: 'A satisfying incremental mining game where every click brings you closer to diamond-tier glory! Features idle/offline progression, tool crafting, worker hiring, gear system, auction house, achievements, and prestige system.',
     repoUrl: 'https://github.com/kevinb42O/mini-diamond-hunt',
     liveUrl: 'https://diamondhunt3.vercel.app/',
-    videoUrl: '/videos/diamond-hunt-demo.mp4',
+    // videoUrl: '/videos/diamond-hunt-demo.mp4', // Add video file to enable hover transition
     features: [
       'Idle/Offline Progression',
       'Tool Crafting System',
@@ -59,7 +59,7 @@ export const projects: ProjectData[] = [
     description: 'AZEROTH SURVIVORS - The ultimate Diep.io-style RPG with epic tank combat! Features complete tank upgrade system with synergies, advanced bot AI with smart formations, auto-turrets, drones, pylons, and mobile-responsive retro aesthetics.',
     repoUrl: 'https://github.com/kevinb42O/diepio-style-rpg-gam',
     liveUrl: 'https://kevinb42o.github.io/diepio-style-rpg-gam',
-    videoUrl: '/videos/azeroth-demo.mp4',
+    // videoUrl: '/videos/azeroth-demo.mp4', // Add video file to enable hover transition
     features: [
       'Tank Upgrade System',
       'Advanced Bot AI',
@@ -78,7 +78,7 @@ export const projects: ProjectData[] = [
     description: 'A hyperlocal mutual aid platform where neighbors help each other through a trust-based economy powered by Lanterns. Features real-time messaging, flare system for help requests, community campfire chat, and Elder reputation system.',
     repoUrl: 'https://github.com/kevinb42O/the-lantern-network',
     liveUrl: 'https://the-lantern-network.vercel.app/',
-    videoUrl: '/videos/lantern-demo.mp4',
+    // videoUrl: '/videos/lantern-demo.mp4', // Add video file to enable hover transition
     features: [
       'Real-time Messaging',
       'Lantern Economy',
@@ -97,7 +97,7 @@ export const projects: ProjectData[] = [
     description: 'A professional MIDI file editor and remixer that transforms uploaded MIDI files through AI-powered genre adaptation. Features high-quality playback with virtual instruments, real-time piano roll visualization, and multi-format export.',
     repoUrl: 'https://github.com/kevinb42O/midi-alchemy',
     liveUrl: 'https://midi-alchemy--kevinb42o.github.app/',
-    videoUrl: '/videos/midi-demo.mp4',
+    // videoUrl: '/videos/midi-demo.mp4', // Add video file to enable hover transition
     features: [
       'AI-Powered Remixing',
       'Piano Roll Visualizer',

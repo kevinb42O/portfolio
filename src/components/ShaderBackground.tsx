@@ -98,7 +98,7 @@ function AnimatedMesh() {
         uniforms={uniforms}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
-        side={THREE.DoubleSide}
+        side={THREE.FrontSide}
       />
     </mesh>
   )
@@ -131,15 +131,14 @@ export function ShaderBackground() {
       />
 
       {/* React Three Fiber Canvas */}
-      {isInView && (
-        <Canvas
-          camera={{ position: [0, 0, 5], fov: 75 }}
-          gl={{ alpha: true, antialias: false }}
-          dpr={[1, 1.5]} // Limit DPR for performance
-        >
-          <AnimatedMesh />
-        </Canvas>
-      )}
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 75 }}
+        gl={{ alpha: true, antialias: false }}
+        dpr={[1, 1.5]} // Limit DPR for performance
+        frameloop={isInView ? 'always' : 'never'} // Pause rendering when not in view
+      >
+        <AnimatedMesh />
+      </Canvas>
     </div>
   )
 }
