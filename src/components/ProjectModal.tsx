@@ -1,0 +1,111 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Star, GitBranch, ArrowUpRight, Calendar, Code } from '@phosphor-icons/react'
+import { Project } from '@/lib/types'
+
+interface ProjectModalProps {
+  project: Project | null
+  open: boolean
+  onClose: () => void
+}
+
+export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
+  if (!project) return null
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] p-0 bg-card border-2 border-primary/30 overflow-hidden">
+        <ScrollArea className="max-h-[90vh]">
+          <div className="p-8 md:p-12">
+            <DialogHeader className="mb-8">
+              <DialogTitle className="text-3xl md:text-4xl font-bold text-foreground mb-4 flex items-center gap-3">
+                {project.title}
+              </DialogTitle>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                {project.language && (
+                  <div className="flex items-center gap-2 mono">
+                    <Code size={16} />
+                    {project.language}
+                  </div>
+                )}
+                {project.stars > 0 && (
+                  <div className="flex items-center gap-2 text-accent">
+                    <Star weight="fill" size={16} />
+                    <span className="mono">{project.stars} stars</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2">
+                  <Calendar size={16} />
+                  <span>
+                    Updated {new Date(project.updatedAt).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </span>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <div className="space-y-8">
+              <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-lg p-8 border border-border">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
+                  <GitBranch size={20} />
+                  About This Project
+                </h3>
+                <p className="text-card-foreground/90 text-base leading-relaxed">
+                  {project.description || 'No description available for this project.'}
+                </p>
+              </div>
+
+              {project.topics.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-foreground">Technologies & Topics</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.topics.map((topic) => (
+                      <Badge
+                        key={topic}
+                        variant="secondary"
+                        className="mono text-sm bg-secondary/70 hover:bg-secondary border border-border px-4 py-2"
+                      >
+                        {topic}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border">
+                <Button
+                  asChild
+                  size="lg"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                >
+                  <a href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                    <GitBranch size={20} className="mr-2" />
+                    View Repository
+                    <ArrowUpRight size={16} className="ml-2" />
+                  </a>
+                </Button>
+                {project.liveUrl && (
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-semibold"
+                  >
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                      Visit Live Site
+                      <ArrowUpRight size={16} className="ml-2" />
+                    </a>
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  )
+}
