@@ -52,10 +52,18 @@ function App() {
       const repoPromises = featuredRepos.map(repoName =>
         fetch(`https://api.github.com/repos/${userInfo.login}/${repoName}`)
           .then(res => res.ok ? res.json() : null)
-          .catch(() => null)
+          .catch(err => {
+            console.warn(`Failed to fetch ${repoName}:`, err)
+            return null
+          })
       )
 
       const repos = (await Promise.all(repoPromises)).filter((repo): repo is Repository => repo !== null)
+      
+      if (repos.length === 0) {
+        toast.error('No repositories found. Check your GitHub connection.')
+        return
+      }
       
       const projectList: Project[] = repos
         .map(repo => {
@@ -67,7 +75,7 @@ function App() {
             title: repo.name.replace(/-/g, ' ').replace(/_/g, ' ').split(' ').map(word => 
               word.charAt(0).toUpperCase() + word.slice(1)
             ).join(' '),
-            description: repo.description || '',
+            description: repo.description || 'An amazing project',
             repoUrl: repo.html_url,
             liveUrl: repo.homepage || undefined,
             stars: repo.stargazers_count,
