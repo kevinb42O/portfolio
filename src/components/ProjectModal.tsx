@@ -133,7 +133,7 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                       <div>
                         <div className="text-sm font-medium text-foreground">Active Development</div>
                         <div className="text-sm text-muted-foreground">
-                          {Math.floor((new Date(project.updatedAt).getTime() - new Date(project.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
+                          {Math.floor((new Date().getTime() - new Date(project.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
                         </div>
                       </div>
                     </div>

@@ -62,19 +62,23 @@ export function ParticleBackground() {
         if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
         if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
 
-        // Draw connections
+        // Draw connections (limit to 3 per particle for performance)
+        let connectionCount = 0
         particles.forEach((otherParticle) => {
+          if (connectionCount >= 3) return
+          
           const dx = particle.x - otherParticle.x
           const dy = particle.y - otherParticle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 150) {
+          if (distance < 150 && distance > 0) {
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
             ctx.strokeStyle = `oklch(0.85 0.18 90 / ${0.1 * (1 - distance / 150)})`
             ctx.lineWidth = 1
             ctx.stroke()
+            connectionCount++
           }
         })
       })
@@ -84,9 +88,13 @@ export function ParticleBackground() {
 
     animate()
 
+    let resizeTimeout: NodeJS.Timeout
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+      }, 150)
     }
 
     window.addEventListener('resize', handleResize)
@@ -94,6 +102,7 @@ export function ParticleBackground() {
     return () => {
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', handleResize)
+      clearTimeout(resizeTimeout)
     }
   }, [])
 

@@ -34,7 +34,10 @@ export function useIntersectionObserver(
     observer.observe(target)
 
     return () => {
-      observer.unobserve(target)
+      if (target) {
+        observer.unobserve(target)
+      }
+      observer.disconnect()
     }
   }, [threshold, rootMargin, triggerOnce])
 
