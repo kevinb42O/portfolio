@@ -48,16 +48,13 @@ export function Hero({ user }: HeroProps) {
           transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
         >
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Sparkle className="text-primary" size={32} weight="fill" />
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
-              Hidden Gems
+              Kevin B.
             </h1>
-            <Sparkle className="text-accent" size={32} weight="fill" />
           </div>
           
           <p className="text-xl md:text-2xl text-card-foreground/80 max-w-3xl mx-auto leading-relaxed">
-            Welcome to a curated collection of projects, experiments, and creative endeavors. 
-            Each repository represents hours of passion, problem-solving, and innovation.
+            Unity Game Developer • Full-Stack Engineer • Creative Technologist
           </p>
         </motion.div>
 
@@ -68,19 +65,20 @@ export function Hero({ user }: HeroProps) {
           className="pt-8"
         >
           <div className="max-w-2xl mx-auto bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-8 space-y-4">
-            <h2 className="text-2xl font-semibold text-foreground mb-4">About the Creator</h2>
+            <h2 className="text-2xl font-semibold text-foreground mb-4">About</h2>
             <p className="text-card-foreground/90 text-base leading-relaxed">
-              A passionate developer who transforms ideas into reality through code. 
-              Every project here tells a story—of learning, experimentation, and the 
-              relentless pursuit of elegant solutions to complex problems. From web 
-              applications to developer tools, from experimental prototypes to 
-              production-ready software, this collection represents a journey of 
-              continuous growth and creative exploration.
+              Specialized in Unity/C# game development and full-stack web applications with React, 
+              TypeScript, and Supabase. My portfolio showcases shipped products ranging from games 
+              like <strong>Gemini Gauntlet</strong>, <strong>Azeroth Survivors</strong>, and 
+              <strong> Mini Diamond Hunt</strong> to professional tools including the revolutionary 
+              <strong> UnityAI Scene Builder Tool</strong> and <strong>Movement Controller PRO</strong>.
             </p>
             <p className="text-card-foreground/90 text-base leading-relaxed">
-              These aren't just repositories—they're artifacts of curiosity, testaments 
-              to late-night coding sessions, and proof that great things happen when 
-              passion meets persistence.
+              From AI-powered Unity editor tools that generate complete 3D worlds in seconds to 
+              engaging web platforms with real-time features, each project demonstrates technical 
+              excellence and creative problem-solving. Whether building advanced movement systems, 
+              crafting immersive game experiences, or developing full-stack applications, I deliver 
+              production-ready solutions that make an impact.
             </p>
             {user && (
               <div className="pt-4">

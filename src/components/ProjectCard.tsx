@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Star, GitBranch, ArrowUpRight, Sparkle } from '@phosphor-icons/react'
+import { Star, GitBranch, ArrowUpRight, Sparkle, Rocket } from '@phosphor-icons/react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Project } from '@/lib/types'
@@ -44,6 +44,8 @@ export function ProjectCard({ project, onClick, index }: ProjectCardProps) {
         className={`project-card group relative overflow-hidden bg-card cursor-pointer h-full flex flex-col transition-all duration-200 ${
           isFlagship 
             ? 'border-2 border-primary/70 hover:border-primary shadow-lg shadow-primary/20' 
+            : project.hasLiveDemo
+            ? 'border-border hover:border-accent/50 shadow-md shadow-accent/10'
             : 'border-border hover:border-primary/50'
         }`}
       >
@@ -85,12 +87,32 @@ export function ProjectCard({ project, onClick, index }: ProjectCardProps) {
             )}
           </div>
 
-          <p className="text-card-foreground/80 text-sm md:text-base mb-6 line-clamp-3 flex-1">
+          <p className="text-card-foreground/80 text-sm md:text-base mb-4 line-clamp-3 flex-1">
             {project.description || 'No description available'}
           </p>
 
+          {project.features && project.features.length > 0 && (
+            <div className="mb-4 space-y-1">
+              {project.features.slice(0, 2).map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-2 mb-4">
-            {project.topics.slice(0, 4).map((topic) => (
+            {project.hasLiveDemo && (
+              <Badge
+                variant="default"
+                className="mono text-xs bg-accent/20 text-accent border border-accent/50 hover:bg-accent/30"
+              >
+                <Rocket size={12} className="mr-1" weight="fill" />
+                Live Demo
+              </Badge>
+            )}
+            {project.topics.slice(0, 3).map((topic) => (
               <Badge
                 key={topic}
                 variant="secondary"
@@ -99,12 +121,12 @@ export function ProjectCard({ project, onClick, index }: ProjectCardProps) {
                 {topic}
               </Badge>
             ))}
-            {project.topics.length > 4 && (
+            {project.topics.length > 3 && (
               <Badge
                 variant="secondary"
                 className="mono text-xs bg-secondary/50 border border-border text-muted-foreground"
               >
-                +{project.topics.length - 4}
+                +{project.topics.length - 3}
               </Badge>
             )}
           </div>
