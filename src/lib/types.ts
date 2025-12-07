@@ -6,6 +6,7 @@ export interface Repository {
   html_url: string
   homepage: string | null
   stargazers_count: number
+  forks_count: number
   language: string | null
   topics: string[]
   created_at: string
@@ -24,8 +25,12 @@ export interface Project {
   repoUrl: string
   liveUrl?: string
   stars: number
+  forks?: number
   language?: string
   topics: string[]
+  createdAt?: string
   updatedAt: string
+  pushedAt?: string
   featured?: boolean
+  repoName?: string
 }

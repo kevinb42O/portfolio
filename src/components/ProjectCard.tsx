@@ -22,9 +22,16 @@ export function ProjectCard({ project, onClick, index }: ProjectCardProps) {
       HTML: 'oklch(0.65 0.15 25)',
       CSS: 'oklch(0.55 0.15 270)',
       Ruby: 'oklch(0.55 0.15 0)',
+      'C#': 'oklch(0.65 0.15 285)',
+      ShaderLab: 'oklch(0.7 0.12 340)',
+      HLSL: 'oklch(0.6 0.13 320)',
+      PLpgSQL: 'oklch(0.55 0.12 210)',
+      PowerShell: 'oklch(0.6 0.15 240)',
     }
     return colors[language || ''] || 'oklch(0.65 0.08 270)'
   }
+
+  const isFlagship = project.title.toLowerCase().includes('unityai') || project.title.toLowerCase().includes('scene builder')
 
   return (
     <motion.div
@@ -34,9 +41,20 @@ export function ProjectCard({ project, onClick, index }: ProjectCardProps) {
     >
       <Card
         onClick={onClick}
-        className="project-card group relative overflow-hidden bg-card border-border hover:border-primary/50 cursor-pointer h-full flex flex-col transition-all duration-200"
+        className={`project-card group relative overflow-hidden bg-card cursor-pointer h-full flex flex-col transition-all duration-200 ${
+          isFlagship 
+            ? 'border-2 border-primary/70 hover:border-primary shadow-lg shadow-primary/20' 
+            : 'border-border hover:border-primary/50'
+        }`}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+          isFlagship
+            ? 'from-primary/15 via-accent/10 to-primary/15'
+            : 'from-primary/5 via-transparent to-accent/5'
+        }`} />
+        {isFlagship && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-70" />
+        )}
         
         <div className="relative z-10 p-6 md:p-8 flex flex-col h-full">
           <div className="flex items-start justify-between gap-4 mb-4">
