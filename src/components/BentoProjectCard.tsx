@@ -29,11 +29,7 @@ export function BentoProjectCard({ project, onClick }: BentoProjectCardProps) {
 
   const handleClick = () => {
     // Haptic feedback animation handled by framer motion
-    if (project.liveUrl) {
-      window.open(project.liveUrl, '_blank', 'noopener,noreferrer')
-    } else {
-      window.open(project.repoUrl, '_blank', 'noopener,noreferrer')
-    }
+    // Open the modal instead of directly opening links
     onClick()
   }
 

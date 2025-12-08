@@ -1,28 +1,37 @@
+import { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Star, GitBranch, ArrowUpRight, Calendar, Code, GitFork, Clock, Sparkle } from '@phosphor-icons/react'
-import { Project } from '@/lib/types'
+import { Star, GitBranch, ArrowUpRight, Code, Sparkle, Play, Image as ImageIcon } from '@phosphor-icons/react'
+import { ProjectData } from '@/lib/projects'
 
 interface ProjectModalProps {
-  project: Project | null
+  project: ProjectData | null
   open: boolean
   onClose: () => void
 }
 
 export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [videoError, setVideoError] = useState(false)
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set())
+
   if (!project) return null
 
-  const isFlagship = project.title.toLowerCase().includes('unityai') || project.title.toLowerCase().includes('scene builder')
+  const isFlagship = project.isFlagship
+
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => new Set(prev).add(index))
+  }
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className={`max-w-4xl max-h-[90vh] p-0 bg-card overflow-hidden ${
+      <DialogContent className={`max-w-5xl max-h-[90vh] p-0 bg-card overflow-hidden ${
         isFlagship ? 'border-2 border-primary/70 shadow-2xl shadow-primary/30' : 'border-2 border-primary/30'
       }`}>
         <ScrollArea className="max-h-[90vh]">
-          <div className="p-8 md:p-12">
+          <div className="p-6 md:p-10">
             {isFlagship && (
               <div className="mb-6 flex items-center justify-center gap-2 text-primary">
                 <Sparkle size={24} weight="fill" />
@@ -30,44 +39,100 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                 <Sparkle size={24} weight="fill" />
               </div>
             )}
-            <DialogHeader className="mb-8">
-              <DialogTitle className="text-3xl md:text-4xl font-bold text-foreground mb-4 flex items-center gap-3">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 {project.title}
               </DialogTitle>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 {project.language && (
                   <div className="flex items-center gap-2 mono">
                     <Code size={16} />
                     {project.language}
                   </div>
                 )}
-                {project.stars > 0 && (
-                  <div className="flex items-center gap-2 text-accent">
-                    <Star weight="fill" size={16} />
-                    <span className="mono">{project.stars} stars</span>
-                  </div>
-                )}
-                {project.forks !== undefined && project.forks > 0 && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <GitFork size={16} />
-                    <span className="mono">{project.forks} forks</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <Calendar size={16} />
-                  <span>
-                    Updated {new Date(project.updatedAt).toLocaleDateString('en-US', {
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </span>
-                </div>
               </div>
             </DialogHeader>
 
-            <div className="space-y-8">
-              <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-lg p-8 border border-border">
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
+            <div className="space-y-6">
+              {/* Video Section */}
+              {project.modalVideo && !videoError && (
+                <div className="relative w-full rounded-lg overflow-hidden border-2 border-border bg-black">
+                  <video
+                    controls
+                    className="w-full h-auto"
+                    poster={project.images?.[0]}
+                    onError={() => setVideoError(true)}
+                  >
+                    <source src={project.modalVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-md flex items-center gap-2">
+                    <Play size={16} className="text-accent" weight="fill" />
+                    <span className="text-xs text-white font-medium">Project Demo</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Images Gallery */}
+              {project.images && project.images.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    <ImageIcon size={20} />
+                    Project Screenshots
+                  </h3>
+                  {/* Main Image */}
+                  <div className="relative w-full rounded-lg overflow-hidden border-2 border-border bg-muted">
+                    {!imageErrors.has(selectedImage) ? (
+                      <img
+                        src={project.images[selectedImage]}
+                        alt={`${project.title} screenshot ${selectedImage + 1}`}
+                        className="w-full h-auto"
+                        onError={() => handleImageError(selectedImage)}
+                      />
+                    ) : (
+                      <div className="w-full h-64 flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+                        <div className="text-center text-muted-foreground">
+                          <ImageIcon size={48} className="mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Screenshot not available</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {/* Thumbnail Navigation */}
+                  {project.images.length > 1 && (
+                    <div className="flex gap-2 overflow-x-auto pb-2">
+                      {project.images.map((image, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedImage(idx)}
+                          className={`relative flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
+                            selectedImage === idx
+                              ? 'border-primary ring-2 ring-primary/50'
+                              : 'border-border hover:border-primary/50'
+                          }`}
+                        >
+                          {!imageErrors.has(idx) ? (
+                            <img
+                              src={image}
+                              alt={`${project.title} thumbnail ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              onError={() => handleImageError(idx)}
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-muted flex items-center justify-center">
+                              <ImageIcon size={16} className="text-muted-foreground opacity-50" />
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-lg p-6 border border-border">
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-foreground">
                   <GitBranch size={20} />
                   About This Project
                 </h3>
@@ -90,11 +155,11 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                 </div>
               )}
 
-              {project.techStack && project.techStack.length > 0 && (
+              {project.stack && project.stack.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-4 text-foreground">Tech Stack</h3>
                   <div className="flex flex-wrap gap-2">
-                    {project.techStack.map((tech) => (
+                    {project.stack.map((tech) => (
                       <Badge
                         key={tech}
                         variant="secondary"
@@ -125,55 +190,7 @@ export function ProjectModal({ project, open, onClose }: ProjectModalProps) {
                 </div>
               )}
 
-              {project.createdAt && (
-                <div className="bg-gradient-to-br from-secondary/30 via-transparent to-secondary/20 rounded-lg p-6 border border-border/50">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-                    <Clock size={20} />
-                    Project Timeline
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-3 h-3 rounded-full bg-primary mt-1" />
-                      <div>
-                        <div className="text-sm font-medium text-foreground">Created</div>
-                        <div className="text-sm text-muted-foreground">
-                          {new Date(project.createdAt).toLocaleDateString('en-US', {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                    {project.pushedAt && (
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-3 h-3 rounded-full bg-accent mt-1" />
-                        <div>
-                          <div className="text-sm font-medium text-foreground">Last Push</div>
-                          <div className="text-sm text-muted-foreground">
-                            {new Date(project.pushedAt).toLocaleDateString('en-US', {
-                              month: 'long',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-3 h-3 rounded-full bg-muted mt-1" />
-                      <div>
-                        <div className="text-sm font-medium text-foreground">Active Development</div>
-                        <div className="text-sm text-muted-foreground">
-                          {Math.floor((new Date().getTime() - new Date(project.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-border">
                 {project.liveUrl && (
                   <Button
                     asChild

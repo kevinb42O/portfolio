@@ -120,6 +120,96 @@ To enable the hover-to-video transitions:
 
 See `public/videos/README.md` for detailed specifications.
 
+## 🖼️ Adding Project Screenshots & Modal Assets
+
+Each project can display detailed information in a modal window when clicked. To add images and videos to the modal:
+
+### 1. Add Project Screenshots
+
+1. **Prepare images**: Take high-quality screenshots (1280x720 or higher, 16:9 aspect ratio)
+2. **Optimize images**: Compress to keep under 500KB per image (use tools like TinyPNG)
+3. **Name convention**: Use `{project-id}-{number}.jpg/png/svg` (e.g., `unityai-scene-builder-1.jpg`)
+4. **Save location**: Place images in `public/images/projects/` directory
+
+### 2. Add Modal Video (Optional)
+
+1. **Prepare video**: Create a demo video (10-30 seconds, MP4 format, under 10MB)
+2. **Save location**: Place in `public/videos/` directory
+3. **Note**: This is different from hover videos - modal videos can be longer and more detailed
+
+### 3. Update Project Data
+
+Edit `src/lib/projects.ts` and add the `images` and `modalVideo` fields to your project:
+
+```typescript
+{
+  id: 'my-project',
+  title: 'My Awesome Project',
+  description: 'Project description...',
+  repoUrl: 'https://github.com/username/repo',
+  liveUrl: 'https://example.com', // Optional
+  
+  // Images for modal gallery (3-5 recommended)
+  images: [
+    '/portfolio/images/projects/my-project-1.jpg',
+    '/portfolio/images/projects/my-project-2.jpg',
+    '/portfolio/images/projects/my-project-3.jpg'
+  ],
+  
+  // Video for modal (optional, different from hover video)
+  modalVideo: '/portfolio/videos/my-project-demo.mp4',
+  
+  // Hover video for card (optional, shorter than modal video)
+  videoUrl: '/videos/my-project-hover.mp4',
+  
+  features: ['Feature 1', 'Feature 2', 'Feature 3'],
+  stack: ['React', 'TypeScript', 'Tailwind CSS'],
+  language: 'TypeScript',
+  topics: ['web', 'game', 'demo'],
+  isFlagship: false, // Set true for flagship projects
+  gridSize: 'medium' // 'small', 'medium', or 'large'
+}
+```
+
+### 4. Fallback Behavior
+
+The modal is designed to work gracefully with missing assets:
+
+- **No images**: Shows a placeholder with "Screenshot not available" message
+- **No video**: Video player section is hidden
+- **Some images fail**: Shows placeholder only for failed images, others display normally
+
+This ensures the modal always displays project information even without media assets.
+
+### Example: Complete Project with Modal Assets
+
+```typescript
+{
+  id: 'unityai-scene-builder',
+  title: 'UnityAI Scene Builder Tool',
+  description: 'AI-powered Unity tool that creates 3D game worlds...',
+  repoUrl: 'https://github.com/kevinb42O/UnityAI_SceneBuilderTool',
+  images: [
+    '/portfolio/images/projects/unityai-scene-builder-1.svg',
+    '/portfolio/images/projects/unityai-scene-builder-2.svg',
+    '/portfolio/images/projects/unityai-scene-builder-3.svg'
+  ],
+  modalVideo: '/portfolio/videos/unityai-demo.mp4',
+  features: [
+    '8-Second World Generation',
+    'Natural Language Interface',
+    'MCP Protocol Integration'
+  ],
+  stack: ['Unity', 'C#', 'AI/LLM Integration'],
+  language: 'C#',
+  topics: ['unity', 'ai', 'game-development'],
+  isFlagship: true,
+  gridSize: 'large'
+}
+```
+
+See `public/images/projects/README.md` for detailed image specifications.
+
 ## 🎨 Customization
 
 ### Colors
@@ -134,6 +224,8 @@ Edit `src/lib/projects.ts` to add/modify projects:
 - Add new project objects to the `projects` array
 - Set `gridSize` to 'small', 'medium', or 'large' for Bento Grid layout
 - Mark flagship projects with `isFlagship: true`
+- Add `images` array for modal screenshots
+- Add `modalVideo` for in-modal video playback
 
 ### Shader Effects
 Modify `src/components/ShaderBackground.tsx` to customize:

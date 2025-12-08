@@ -6,6 +6,8 @@ export interface ProjectData {
   liveUrl?: string
   videoUrl?: string // For hover state video
   thumbnail?: string // Static thumbnail image
+  images?: string[] // Screenshots/images for modal
+  modalVideo?: string // Video for modal (different from hover video)
   stack: string[]
   features: string[]
   language: string
@@ -21,6 +23,12 @@ export const projects: ProjectData[] = [
     description: 'Revolutionary AI-powered Unity tool that creates complete 3D game worlds in 8 seconds using natural language. Type "Create a fantasy world" and watch it build terrains, place objects, apply materials, and configure lighting automatically.',
     repoUrl: 'https://github.com/kevinb42O/UnityAI_SceneBuilderTool',
     // videoUrl: '/videos/unityai-demo.mp4', // Add video file to enable hover transition
+    images: [
+      '/portfolio/images/projects/unityai-scene-builder-1.svg',
+      '/portfolio/images/projects/unityai-scene-builder-2.svg',
+      '/portfolio/images/projects/unityai-scene-builder-3.svg'
+    ],
+    modalVideo: '/portfolio/videos/unityai-demo.mp4',
     features: [
       '8-Second World Generation',
       'Natural Language Interface',
@@ -41,6 +49,12 @@ export const projects: ProjectData[] = [
     repoUrl: 'https://github.com/kevinb42O/mini-diamond-hunt',
     liveUrl: 'https://diamondhunt3.vercel.app/',
     // videoUrl: '/videos/diamond-hunt-demo.mp4', // Add video file to enable hover transition
+    images: [
+      '/portfolio/images/projects/mini-diamond-hunt-1.svg',
+      '/portfolio/images/projects/mini-diamond-hunt-2.svg',
+      '/portfolio/images/projects/mini-diamond-hunt-3.svg'
+    ],
+    modalVideo: '/portfolio/videos/diamond-hunt-demo.mp4',
     features: [
       'Idle/Offline Progression',
       'Tool Crafting System',
