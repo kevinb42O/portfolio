@@ -7,6 +7,7 @@ import { BentoGrid, BentoCard } from '@/components/BentoGrid'
 import { BentoProjectCard } from '@/components/BentoProjectCard'
 import { VSCodeAbout } from '@/components/VSCodeAbout'
 import { ProjectModal } from '@/components/ProjectModal'
+import { CopilotCharacters } from '@/components/CopilotCharacters'
 import { projects, ProjectData } from '@/lib/projects'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
@@ -143,6 +144,11 @@ function App() {
             ))}
           </BentoGrid>
         )}
+      </section>
+
+      {/* Copilot Characters Interactive Section */}
+      <section className="relative">
+        <CopilotCharacters />
       </section>
 
       {/* Footer */}
