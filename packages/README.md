@@ -1,6 +1,6 @@
 # GitGotchi Monorepo
 
-A monorepo for "GitGotchi" (aka "Copilot Crew") - a developer companion system that connects three parts: a Web Showcase, a Desktop Companion App, and a VS Code Extension.
+A monorepo for "GitGotchi" (aka "Copilot Crew") - a developer companion system that connects four parts: a Web Showcase, a Desktop Companion App, a VS Code Extension, and a Mobile Android App.
 
 ## Structure
 
@@ -9,7 +9,8 @@ packages/
 ├── shared/          # Shared eye-tracking logic, types, and physics
 ├── web/            # Next.js Portfolio Showcase
 ├── app/            # Tauri Desktop Companion
-└── extension/      # VS Code Extension
+├── extension/      # VS Code Extension
+└── mobile-android/ # Android System-Wide Overlay Pet
 ```
 
 ## Getting Started
@@ -20,6 +21,7 @@ packages/
 - pnpm 10+
 - Rust 1.91+ (for Tauri app)
 - VS Code (for extension development)
+- Android Studio & Android SDK 35+ (for mobile-android)
 
 ### Installation
 
@@ -113,6 +115,24 @@ VS Code extension that:
 - `gitgotchi.reconnect` - Reconnect WebSocket
 - `gitgotchi.toggleDevMode` - Toggle dev mode
 
+### 📱 mobile-android
+
+Native Android app with system-wide overlay:
+- **Lives on screen 24/7** across all apps
+- System-wide floating overlay using `SYSTEM_ALERT_WINDOW`
+- Physics engine (rope swinging, skateboarding, gravity)
+- Touch interactions (drag, tap, fling)
+- GitHub integration with agent tracking
+- Pet reacts to commits, PRs, CI status, streak
+- Home screen widget support
+
+**Key Features:**
+- Rope swinging with pendulum physics
+- Skateboarding along navigation bar
+- Always-on-top rendering
+- Character selection (Copilot, Octocat, Robot)
+- Auto-start on boot
+
 ## WebSocket Protocol
 
 Communication between VS Code extension and desktop app:
@@ -149,6 +169,14 @@ Communication between VS Code extension and desktop app:
 │  Web Showcase   │
 │  (Next.js)      │
 └─────────────────┘
+
+┌─────────────────┐
+│  Mobile App     │
+│  (Android)      │
+│  - Kotlin       │
+│  - System       │
+│    Overlay      │
+└─────────────────┘
 ```
 
 ## Technologies
@@ -157,6 +185,7 @@ Communication between VS Code extension and desktop app:
 - **Web**: Next.js 16 + Tailwind CSS 4
 - **Desktop**: Tauri 2 + React 19
 - **Extension**: VS Code Extension API + WebSocket
+- **Mobile**: Kotlin + Android SDK + Retrofit + Coroutines
 - **Shared**: React 19 + Framer Motion + TypeScript
 
 ## License
