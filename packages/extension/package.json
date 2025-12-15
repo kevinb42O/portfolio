@@ -1,0 +1,71 @@
+{
+  "name": "gitgotchi",
+  "displayName": "GitGotchi",
+  "description": "Your AI-powered desktop companion that reacts to your VS Code activity",
+  "version": "0.1.0",
+  "publisher": "gitgotchi",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "gitgotchi.launch",
+        "title": "GitGotchi: Launch Desktop App"
+      },
+      {
+        "command": "gitgotchi.reconnect",
+        "title": "GitGotchi: Reconnect WebSocket"
+      },
+      {
+        "command": "gitgotchi.toggleDevMode",
+        "title": "GitGotchi: Toggle Dev Mode"
+      }
+    ],
+    "configuration": {
+      "title": "GitGotchi",
+      "properties": {
+        "gitgotchi.autoLaunch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically launch GitGotchi desktop app on VS Code startup"
+        },
+        "gitgotchi.websocketPort": {
+          "type": "number",
+          "default": 42069,
+          "description": "WebSocket port for communication with desktop app"
+        },
+        "gitgotchi.idleTimeout": {
+          "type": "number",
+          "default": 30,
+          "description": "Idle timeout in seconds before sending idle event"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/vscode": "^1.85.0",
+    "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "typescript": "~5.7.2"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
