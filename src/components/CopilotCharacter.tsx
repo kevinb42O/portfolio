@@ -70,7 +70,7 @@ export const CopilotCharacter = memo(function CopilotCharacter({
   const [eyePosition, setEyePosition] = useState({ left: { x: 0, y: 0 }, right: { x: 0, y: 0 } })
   const [isHovered, setIsHovered] = useState(false)
   const [isBlinking, setIsBlinking] = useState(false)
-  const blinkTimeoutRef = useRef<number>()
+  const blinkTimeoutRef = useRef<number | undefined>(undefined)
   
   const colors = COLOR_SCHEMES[color]
 
