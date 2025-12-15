@@ -60,8 +60,11 @@ class GitGotchiView(context: Context) : View(context) {
         // Get current animation frame
         val currentFrame = petStateMachine.getCurrentFrame()
         
-        // Render the pet
-        petRenderer.draw(canvas, position, currentFrame, paint)
+        // Get current state
+        val currentState = petStateMachine.getCurrentState()
+        
+        // Render the pet with procedural animation
+        petRenderer.draw(canvas, position, currentFrame, paint, currentState)
     }
     
     @SuppressLint("ClickableViewAccessibility")
