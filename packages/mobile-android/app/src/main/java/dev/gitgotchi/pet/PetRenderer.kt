@@ -48,7 +48,7 @@ class PetRenderer {
         isAntiAlias = true
     }
     
-    fun draw(canvas: Canvas, position: PointF, frame: Int, paint: Paint, state: PetState = PetState.IDLE_STAND) {
+    fun draw(canvas: Canvas, position: PointF, frame: Int, state: PetState = PetState.IDLE_STAND) {
         animationTime += 0.1f
         
         when (state) {

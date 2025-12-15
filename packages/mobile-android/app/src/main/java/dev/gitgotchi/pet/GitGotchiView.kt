@@ -17,30 +17,28 @@ import dev.gitgotchi.physics.PhysicsEngine
  */
 class GitGotchiView(context: Context) : View(context) {
     
+    companion object {
+        private const val FRAME_DELAY_MS = 16L // 60fps
+    }
+    
     private val physicsEngine = PhysicsEngine()
     private val touchHandler = TouchHandler(this)
     private val petRenderer = PetRenderer()
     private val petStateMachine = PetStateMachine()
     
-    private val paint = Paint().apply {
-        color = Color.parseColor("#58A6FF") // GitHub blue
-        style = Paint.Style.FILL
-        isAntiAlias = true
-    }
-    
     private val updateRunnable = object : Runnable {
         override fun run() {
-            // Update physics (16ms = 60fps)
-            physicsEngine.update(16f)
+            // Update physics at 60fps
+            physicsEngine.update(FRAME_DELAY_MS.toFloat())
             
             // Update animation state
-            petStateMachine.update(16f)
+            petStateMachine.update(FRAME_DELAY_MS.toFloat())
             
             // Redraw
             invalidate()
             
             // Schedule next update
-            postDelayed(this, 16)
+            postDelayed(this, FRAME_DELAY_MS)
         }
     }
     
@@ -65,7 +63,7 @@ class GitGotchiView(context: Context) : View(context) {
         val currentState = petStateMachine.getCurrentState()
         
         // Render the pet with procedural animation
-        petRenderer.draw(canvas, position, currentFrame, paint, currentState)
+        petRenderer.draw(canvas, position, currentFrame, currentState)
     }
     
     @SuppressLint("ClickableViewAccessibility")

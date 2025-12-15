@@ -27,7 +27,9 @@ class OverlayNotification(private val context: Context) {
         return NotificationCompat.Builder(context, GitGotchiApp.OVERLAY_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(context.getString(R.string.overlay_notification_title))
             .setContentText(context.getString(R.string.overlay_notification_content))
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // TODO: Replace with custom icon
+            // TODO: Replace with custom app icon (e.g., R.drawable.ic_gitgotchi_notification)
+            // For now using system icon as placeholder
+            .setSmallIcon(android.R.drawable.stat_notify_sync)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)

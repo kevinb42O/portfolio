@@ -12,7 +12,12 @@ import androidx.browser.customtabs.CustomTabsIntent
 class GitHubAuthManager(private val context: Context) {
     
     companion object {
-        private const val CLIENT_ID = "YOUR_GITHUB_CLIENT_ID" // TODO: Add your client ID
+        // TODO: Add these to BuildConfig or local.properties for security
+        // Never commit real credentials to source control!
+        // For development: Add to local.properties:
+        // github.client.id=your_client_id_here
+        // github.client.secret=your_client_secret_here
+        private const val CLIENT_ID = "YOUR_GITHUB_CLIENT_ID" 
         private const val REDIRECT_URI = "gitgotchi://oauth/callback"
         private const val AUTH_URL = "https://github.com/login/oauth/authorize"
         private const val TOKEN_URL = "https://github.com/login/oauth/access_token"

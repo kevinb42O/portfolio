@@ -107,12 +107,16 @@ class TouchHandler(private val gitGotchiView: GitGotchiView) {
     }
     
     private fun handleDrag(deltaX: Float, deltaY: Float) {
-        // TODO: Notify parent service to update overlay position
-        // For now, just update internal position
+        // TODO: Implement actual overlay repositioning
+        // Need to get reference to OverlayService and call updatePosition()
+        // This requires passing service reference or using a callback interface
+        // For now, gesture is detected but not acted upon
     }
     
     private fun handleFling(velocityX: Float, velocityY: Float) {
         // TODO: Apply velocity to physics engine
-        // Pet should fly across screen and bounce off edges
+        // Need to get reference to PhysicsEngine from GitGotchiView
+        // Then call: physicsEngine.applyForce(velocityX / 100f, velocityY / 100f)
+        // Pet will fly across screen and bounce off edges automatically
     }
 }
