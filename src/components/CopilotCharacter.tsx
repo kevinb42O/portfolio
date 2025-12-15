@@ -68,30 +68,76 @@ export const CopilotCharacter = memo(function CopilotCharacter({
   
   const colors = COLOR_SCHEMES[color]
 
-  // Calculate eye position based on pointer
+  // Calculate eye position based on pointer with perfect circular constraints
   useEffect(() => {
     if (!characterRef.current) return
 
     const rect = characterRef.current.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
+    const characterCenterX = rect.left + rect.width / 2
+    const characterCenterY = rect.top + rect.height / 2
 
-    const angle = Math.atan2(pointerY - centerY, pointerX - centerX)
-    const distance = Math.min(
-      Math.sqrt(Math.pow(pointerX - centerX, 2) + Math.pow(pointerY - centerY, 2)) / 100,
-      1
+    // Calculate angle from character to pointer
+    const angle = Math.atan2(pointerY - characterCenterY, pointerX - characterCenterX)
+    
+    // Calculate distance from character center to pointer
+    const distanceToPointer = Math.sqrt(
+      Math.pow(pointerX - characterCenterX, 2) + 
+      Math.pow(pointerY - characterCenterY, 2)
     )
 
-    // Maximum eye movement range
-    const maxMove = size * 0.08
-    const moveX = Math.cos(angle) * distance * maxMove
-    const moveY = Math.sin(angle) * distance * maxMove
+    // Define eye-specific parameters based on variant
+    let eyeWhiteRadius: number
+    let pupilRadius: number
+    
+    switch (variant) {
+      case 'copilot':
+        eyeWhiteRadius = 7 * (size / 100) // White part of eye
+        pupilRadius = 4 * (size / 100) // Pupil size
+        break
+      case 'octocat':
+        eyeWhiteRadius = 8 * (size / 100)
+        pupilRadius = 5 * (size / 100)
+        break
+      case 'robot':
+        eyeWhiteRadius = 5 * (size / 100) // Rectangle eye, use as radius equivalent
+        pupilRadius = 3 * (size / 100)
+        break
+    }
+
+    // Calculate maximum movement: radius of eye white minus radius of pupil
+    // This ensures pupil stays completely inside the eye white
+    const maxPupilMovement = eyeWhiteRadius - pupilRadius
+
+    // Calculate how much the pupil should move based on pointer distance
+    // Use a smooth falloff function for more natural movement
+    const movementIntensity = Math.min(distanceToPointer / 200, 1)
+    
+    // Apply easing for more natural eye movement
+    const easedIntensity = 1 - Math.pow(1 - movementIntensity, 2) // Quadratic ease-out
+    
+    // Calculate desired movement
+    const desiredMoveX = Math.cos(angle) * easedIntensity * maxPupilMovement
+    const desiredMoveY = Math.sin(angle) * easedIntensity * maxPupilMovement
+    
+    // CRITICAL: Enforce circular boundary constraint
+    // Calculate the distance from center of the movement
+    const movementDistance = Math.sqrt(desiredMoveX * desiredMoveX + desiredMoveY * desiredMoveY)
+    
+    // Clamp the movement to stay within the circular boundary
+    let finalMoveX = desiredMoveX
+    let finalMoveY = desiredMoveY
+    
+    if (movementDistance > maxPupilMovement) {
+      // Normalize and scale back to maximum allowed movement
+      finalMoveX = (desiredMoveX / movementDistance) * maxPupilMovement
+      finalMoveY = (desiredMoveY / movementDistance) * maxPupilMovement
+    }
 
     setEyePosition({
-      left: { x: moveX, y: moveY },
-      right: { x: moveX, y: moveY },
+      left: { x: finalMoveX, y: finalMoveY },
+      right: { x: finalMoveX, y: finalMoveY },
     })
-  }, [pointerX, pointerY, size])
+  }, [pointerX, pointerY, size, variant])
 
   // Random blinking animation
   useEffect(() => {
@@ -148,41 +194,59 @@ export const CopilotCharacter = memo(function CopilotCharacter({
             {/* Visor/glasses effect */}
             <rect x="28" y="24" width="44" height="12" rx="6" fill="rgba(0,0,0,0.4)" />
             
+            {/* Clip paths for eyes - ensures pupils NEVER escape */}
+            <defs>
+              <clipPath id={`left-eye-clip-${color}-${variant}`}>
+                <circle cx="38" cy="30" r="7" />
+              </clipPath>
+              <clipPath id={`right-eye-clip-${color}-${variant}`}>
+                <circle cx="62" cy="30" r="7" />
+              </clipPath>
+            </defs>
+            
             {/* Eyes container */}
             <g className="eyes">
-              {/* Left eye */}
+              {/* Left eye white */}
               <circle cx="38" cy="30" r="7" fill="white" opacity={isBlinking ? 0 : 1} />
-              <circle 
-                cx={38 + eyePosition.left.x} 
-                cy={30 + eyePosition.left.y} 
-                r="4" 
-                fill={colors.eye}
-                opacity={isBlinking ? 0 : 1}
-              >
-                <animate
-                  attributeName="opacity"
-                  values="1;0.8;1"
-                  dur="2s"
-                  repeatCount="indefinite"
-                />
-              </circle>
               
-              {/* Right eye */}
+              {/* Left eye pupil with clip path constraint */}
+              <g clipPath={`url(#left-eye-clip-${color}-${variant})`}>
+                <circle 
+                  cx={38 + eyePosition.left.x} 
+                  cy={30 + eyePosition.left.y} 
+                  r="4" 
+                  fill={colors.eye}
+                  opacity={isBlinking ? 0 : 1}
+                >
+                  <animate
+                    attributeName="opacity"
+                    values="1;0.8;1"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+              
+              {/* Right eye white */}
               <circle cx="62" cy="30" r="7" fill="white" opacity={isBlinking ? 0 : 1} />
-              <circle 
-                cx={62 + eyePosition.right.x} 
-                cy={30 + eyePosition.right.y} 
-                r="4" 
-                fill={colors.eye}
-                opacity={isBlinking ? 0 : 1}
-              >
-                <animate
-                  attributeName="opacity"
-                  values="1;0.8;1"
-                  dur="2s"
-                  repeatCount="indefinite"
-                />
-              </circle>
+              
+              {/* Right eye pupil with clip path constraint */}
+              <g clipPath={`url(#right-eye-clip-${color}-${variant})`}>
+                <circle 
+                  cx={62 + eyePosition.right.x} 
+                  cy={30 + eyePosition.right.y} 
+                  r="4" 
+                  fill={colors.eye}
+                  opacity={isBlinking ? 0 : 1}
+                >
+                  <animate
+                    attributeName="opacity"
+                    values="1;0.8;1"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
             </g>
             
             {/* Arms */}
@@ -202,6 +266,12 @@ export const CopilotCharacter = memo(function CopilotCharacter({
                 <stop offset="0%" stopColor={colors.highlight} />
                 <stop offset="100%" stopColor={colors.secondary} />
               </linearGradient>
+              <clipPath id={`octo-left-eye-clip-${color}`}>
+                <circle cx="38" cy="37" r="8" />
+              </clipPath>
+              <clipPath id={`octo-right-eye-clip-${color}`}>
+                <circle cx="62" cy="37" r="8" />
+              </clipPath>
             </defs>
             
             {/* Shadow */}
@@ -220,22 +290,26 @@ export const CopilotCharacter = memo(function CopilotCharacter({
             
             {/* Eyes */}
             <circle cx="38" cy="37" r="8" fill="white" opacity={isBlinking ? 0 : 1} />
-            <circle 
-              cx={38 + eyePosition.left.x} 
-              cy={37 + eyePosition.left.y} 
-              r="5" 
-              fill={colors.eye}
-              opacity={isBlinking ? 0 : 1}
-            />
+            <g clipPath={`url(#octo-left-eye-clip-${color})`}>
+              <circle 
+                cx={38 + eyePosition.left.x} 
+                cy={37 + eyePosition.left.y} 
+                r="5" 
+                fill={colors.eye}
+                opacity={isBlinking ? 0 : 1}
+              />
+            </g>
             
             <circle cx="62" cy="37" r="8" fill="white" opacity={isBlinking ? 0 : 1} />
-            <circle 
-              cx={62 + eyePosition.right.x} 
-              cy={37 + eyePosition.right.y} 
-              r="5" 
-              fill={colors.eye}
-              opacity={isBlinking ? 0 : 1}
-            />
+            <g clipPath={`url(#octo-right-eye-clip-${color})`}>
+              <circle 
+                cx={62 + eyePosition.right.x} 
+                cy={37 + eyePosition.right.y} 
+                r="5" 
+                fill={colors.eye}
+                opacity={isBlinking ? 0 : 1}
+              />
+            </g>
             
             {/* Paws */}
             <ellipse cx="35" cy="80" rx="10" ry="8" fill={colors.primary} />
@@ -251,6 +325,12 @@ export const CopilotCharacter = memo(function CopilotCharacter({
                 <stop offset="0%" stopColor={colors.highlight} />
                 <stop offset="100%" stopColor={colors.secondary} />
               </linearGradient>
+              <clipPath id={`robot-left-eye-clip-${color}`}>
+                <rect x="40" y="27" width="8" height="10" rx="2" />
+              </clipPath>
+              <clipPath id={`robot-right-eye-clip-${color}`}>
+                <rect x="52" y="27" width="8" height="10" rx="2" />
+              </clipPath>
             </defs>
             
             {/* Shadow */}
@@ -273,26 +353,30 @@ export const CopilotCharacter = memo(function CopilotCharacter({
             
             {/* Eyes */}
             <rect x="40" y="27" width="8" height="10" rx="2" fill="white" opacity={isBlinking ? 0 : 1} />
-            <rect 
-              x={40 + eyePosition.left.x} 
-              y={27 + eyePosition.left.y} 
-              width="5" 
-              height="7" 
-              rx="1"
-              fill={colors.eye}
-              opacity={isBlinking ? 0 : 1}
-            />
+            <g clipPath={`url(#robot-left-eye-clip-${color})`}>
+              <rect 
+                x={40 + eyePosition.left.x} 
+                y={27 + eyePosition.left.y} 
+                width="5" 
+                height="7" 
+                rx="1"
+                fill={colors.eye}
+                opacity={isBlinking ? 0 : 1}
+              />
+            </g>
             
             <rect x="52" y="27" width="8" height="10" rx="2" fill="white" opacity={isBlinking ? 0 : 1} />
-            <rect 
-              x={52 + eyePosition.right.x} 
-              y={27 + eyePosition.right.y} 
-              width="5" 
-              height="7" 
-              rx="1"
-              fill={colors.eye}
-              opacity={isBlinking ? 0 : 1}
-            />
+            <g clipPath={`url(#robot-right-eye-clip-${color})`}>
+              <rect 
+                x={52 + eyePosition.right.x} 
+                y={27 + eyePosition.right.y} 
+                width="5" 
+                height="7" 
+                rx="1"
+                fill={colors.eye}
+                opacity={isBlinking ? 0 : 1}
+              />
+            </g>
             
             {/* Arms */}
             <rect x="15" y="50" width="8" height="30" rx="4" fill={colors.secondary} />
