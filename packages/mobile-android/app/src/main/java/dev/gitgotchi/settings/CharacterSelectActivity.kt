@@ -24,7 +24,7 @@ class CharacterSelectActivity : AppCompatActivity() {
     }
     
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        finish()
         return true
     }
 }

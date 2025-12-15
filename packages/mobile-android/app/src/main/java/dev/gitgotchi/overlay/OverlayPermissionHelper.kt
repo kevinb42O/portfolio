@@ -63,7 +63,9 @@ class OverlayPermissionHelper(private val activity: Activity) {
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:${activity.packageName}")
             )
-            activity.startActivityForResult(intent, REQUEST_CODE_OVERLAY_PERMISSION)
+            // Note: Using startActivity instead of deprecated startActivityForResult
+            // Overlay permission changes will be detected when activity resumes
+            activity.startActivity(intent)
         }
     }
 }

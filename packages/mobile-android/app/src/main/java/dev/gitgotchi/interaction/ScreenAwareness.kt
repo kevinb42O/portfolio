@@ -3,6 +3,7 @@ package dev.gitgotchi.interaction
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
+import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowManager
 
@@ -43,9 +44,15 @@ class ScreenAwareness(private val context: Context) {
      */
     fun getScreenDimensions(): Pair<Int, Int> {
         val displayMetrics = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        return Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics = windowManager.currentWindowMetrics
+            val bounds = windowMetrics.bounds
+            return Pair(bounds.width(), bounds.height())
+        } else {
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            return Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        }
     }
     
     /**

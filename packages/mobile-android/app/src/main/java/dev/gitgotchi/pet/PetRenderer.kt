@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.RectF
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -359,5 +360,4 @@ class PetRenderer {
         canvas.drawPath(path, paint)
     }
     
-    private fun abs(value: Float) = if (value < 0) -value else value
 }

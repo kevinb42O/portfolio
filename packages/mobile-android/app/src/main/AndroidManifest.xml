@@ -68,7 +68,7 @@
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="system_overlay_pet" />
+                android:value="Displays an interactive pet overlay on screen" />
         </service>
 
         <!-- Boot Receiver -->

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import dev.gitgotchi.interaction.TouchHandler
 import dev.gitgotchi.physics.PhysicsEngine
 
@@ -45,7 +46,7 @@ class GitGotchiView(context: Context) : View(context) {
     
     init {
         // Set view size
-        layoutParams = LayoutParams(200, 200)
+        layoutParams = ViewGroup.LayoutParams(200, 200)
         
         // Start update loop
         post(updateRunnable)
