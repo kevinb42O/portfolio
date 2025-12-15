@@ -114,14 +114,19 @@ export function usePointerPosition(options: UsePointerPositionOptions = {}) {
     // Use passive listeners for better scroll performance
     const options: AddEventListenerOptions = { passive: true }
     
-    window.addEventListener('mousemove', handleMouseMove, options)
-    window.addEventListener('touchmove', handleTouchMove, options)
-    window.addEventListener('touchstart', handleTouchStart, options)
+    // Store current handler references for cleanup
+    const currentHandleMouseMove = handleMouseMove
+    const currentHandleTouchMove = handleTouchMove
+    const currentHandleTouchStart = handleTouchStart
+    
+    window.addEventListener('mousemove', currentHandleMouseMove, options)
+    window.addEventListener('touchmove', currentHandleTouchMove, options)
+    window.addEventListener('touchstart', currentHandleTouchStart, options)
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('touchmove', handleTouchMove)
-      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('mousemove', currentHandleMouseMove)
+      window.removeEventListener('touchmove', currentHandleTouchMove)
+      window.removeEventListener('touchstart', currentHandleTouchStart)
       
       if (rafId.current !== null) {
         cancelAnimationFrame(rafId.current)

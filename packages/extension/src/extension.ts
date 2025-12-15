@@ -168,11 +168,16 @@ async function isAppRunning(): Promise<boolean> {
 
 function launchDesktopApp(): void {
   try {
+    const config = vscode.workspace.getConfiguration('gitgotchi');
+    const customPath = config.get<string>('appPath', '');
+    
     const platform = os.platform();
     let appPath: string;
 
-    // In production, these paths would be configurable or detected
-    if (platform === 'win32') {
+    // Use custom path if provided, otherwise use platform defaults
+    if (customPath) {
+      appPath = customPath;
+    } else if (platform === 'win32') {
       appPath = path.join(os.homedir(), 'AppData', 'Local', 'GitGotchi', 'gitgotchi.exe');
     } else if (platform === 'darwin') {
       appPath = '/Applications/GitGotchi.app/Contents/MacOS/gitgotchi';

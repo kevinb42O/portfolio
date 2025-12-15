@@ -20,9 +20,9 @@ fn move_character(window: Window, x: i32, y: i32) -> Result<(), String> {
 
 #[tauri::command]
 fn get_screen_size() -> Result<(u32, u32), String> {
-    // Get primary monitor size
-    // In production, this would use platform-specific APIs
-    // For now, return a default screen size
+    // TODO: Implement actual screen size detection using platform-specific APIs
+    // For now, return a common default screen size
+    // In production, use window-shadows or screen-rs crate for cross-platform screen detection
     Ok((1920, 1080))
 }
 

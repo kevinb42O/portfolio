@@ -46,6 +46,11 @@
           "type": "number",
           "default": 30,
           "description": "Idle timeout in seconds before sending idle event"
+        },
+        "gitgotchi.appPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to GitGotchi desktop app executable (leave empty for auto-detection)"
         }
       }
     }
