@@ -10,12 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*-dist
 *.local
-out
-.next
-target
-*.vsix
 
 # Editor directories and files
 .vscode/*
@@ -27,11 +22,3 @@ target
 *.njsproj
 *.sln
 *.sw?
-
-.env
-**/agent-eval-report*
-pids
-.file-manifest
-.devcontainer/
-
-.spark-workbench-id
