@@ -110,8 +110,6 @@ export function usePointerPosition(options: UsePointerPositionOptions = {}) {
     }
   }, [])
 
-
-
   useEffect(() => {
     // Use passive listeners for better scroll performance
     const options: AddEventListenerOptions = { passive: true }

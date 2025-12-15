@@ -12,6 +12,12 @@ interface CopilotCharacterProps {
   delay?: number
 }
 
+// Eye tracking constants
+const EYE_TRACKING_DISTANCE_SENSITIVITY = 200 // Distance in pixels for full eye movement intensity
+const MIN_BLINK_INTERVAL = 2000 // Minimum time between blinks (ms)
+const MAX_BLINK_INTERVAL = 4000 // Maximum time between blinks (ms)
+const BLINK_DURATION = 150 // Duration of blink animation (ms)
+
 const COLOR_SCHEMES = {
   blue: {
     primary: 'oklch(0.65 0.25 240)',
@@ -110,7 +116,7 @@ export const CopilotCharacter = memo(function CopilotCharacter({
 
     // Calculate how much the pupil should move based on pointer distance
     // Use a smooth falloff function for more natural movement
-    const movementIntensity = Math.min(distanceToPointer / 200, 1)
+    const movementIntensity = Math.min(distanceToPointer / EYE_TRACKING_DISTANCE_SENSITIVITY, 1)
     
     // Apply easing for more natural eye movement
     const easedIntensity = 1 - Math.pow(1 - movementIntensity, 2) // Quadratic ease-out
@@ -142,13 +148,13 @@ export const CopilotCharacter = memo(function CopilotCharacter({
   // Random blinking animation
   useEffect(() => {
     const scheduleNextBlink = () => {
-      const nextBlinkDelay = 2000 + Math.random() * 4000
+      const nextBlinkDelay = MIN_BLINK_INTERVAL + Math.random() * MAX_BLINK_INTERVAL
       blinkTimeoutRef.current = window.setTimeout(() => {
         setIsBlinking(true)
         window.setTimeout(() => {
           setIsBlinking(false)
           scheduleNextBlink()
-        }, 150)
+        }, BLINK_DURATION)
       }, nextBlinkDelay)
     }
 
