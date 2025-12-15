@@ -8,7 +8,7 @@ export function useWebSocket() {
   const [isConnected, setIsConnected] = useState(false)
   const [lastEvent, setLastEvent] = useState<WebSocketEvent | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
-  const reconnectTimeoutRef = useRef<number>()
+  const reconnectTimeoutRef = useRef<number | undefined>(undefined)
 
   const connect = useCallback(() => {
     try {

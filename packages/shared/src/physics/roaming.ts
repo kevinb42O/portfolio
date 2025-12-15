@@ -43,7 +43,7 @@ export class RoamingEngine {
   /**
    * Update physics simulation by one frame
    */
-  update(deltaTime: number = 1): RoamingState {
+  update(_deltaTime: number = 1): RoamingState {
     if (this.state.isSwinging && this.state.ropeAnchor) {
       this.updateSwinging()
     } else {

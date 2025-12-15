@@ -100,17 +100,8 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   // Monitor git operations (via terminal)
-  context.subscriptions.push(
-    vscode.window.onDidWriteTerminalShellIntegration((event) => {
-      const command = event.shellIntegration.cwd;
-      // This is a simplified check - in production, we'd need better git detection
-      if (command?.includes('git push')) {
-        sendEvent({ type: 'git_push' });
-      } else if (command?.includes('git pull')) {
-        sendEvent({ type: 'git_pull' });
-      }
-    })
-  );
+  // Note: Git detection would require additional implementation or git extension API
+  // For now, this is a placeholder for future implementation
 
   // Start idle timer
   resetIdleTimer(idleTimeoutSeconds);

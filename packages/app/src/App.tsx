@@ -15,7 +15,7 @@ function App() {
   const { position } = usePointerPosition();
   const { isConnected, lastEvent } = useWebSocket();
   const [devMode, setDevMode] = useState(false);
-  const [characterState, setCharacterState] = useState<'idle' | 'active'>('idle');
+  const [, setCharacterState] = useState<'idle' | 'active'>('idle');
 
   useEffect(() => {
     // Check if we're in dev mode
