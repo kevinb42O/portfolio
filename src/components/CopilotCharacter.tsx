@@ -64,7 +64,7 @@ export const CopilotCharacter = memo(function CopilotCharacter({
   const [eyePosition, setEyePosition] = useState({ left: { x: 0, y: 0 }, right: { x: 0, y: 0 } })
   const [isHovered, setIsHovered] = useState(false)
   const [isBlinking, setIsBlinking] = useState(false)
-  const blinkTimeoutRef = useRef<NodeJS.Timeout>()
+  const blinkTimeoutRef = useRef<number>()
   
   const colors = COLOR_SCHEMES[color]
 
@@ -97,9 +97,9 @@ export const CopilotCharacter = memo(function CopilotCharacter({
   useEffect(() => {
     const scheduleNextBlink = () => {
       const nextBlinkDelay = 2000 + Math.random() * 4000
-      blinkTimeoutRef.current = setTimeout(() => {
+      blinkTimeoutRef.current = window.setTimeout(() => {
         setIsBlinking(true)
-        setTimeout(() => {
+        window.setTimeout(() => {
           setIsBlinking(false)
           scheduleNextBlink()
         }, 150)
@@ -109,8 +109,9 @@ export const CopilotCharacter = memo(function CopilotCharacter({
     scheduleNextBlink()
 
     return () => {
-      if (blinkTimeoutRef.current) {
+      if (blinkTimeoutRef.current !== undefined) {
         clearTimeout(blinkTimeoutRef.current)
+        blinkTimeoutRef.current = undefined
       }
     }
   }, [])

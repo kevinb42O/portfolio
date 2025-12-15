@@ -110,15 +110,7 @@ export function usePointerPosition(options: UsePointerPositionOptions = {}) {
     }
   }, [])
 
-  // Handle mouse enter
-  const handleMouseEnter = useCallback(() => {
-    setIsActive(true)
-  }, [])
 
-  // Handle mouse leave
-  const handleMouseLeave = useCallback(() => {
-    setIsActive(false)
-  }, [])
 
   useEffect(() => {
     // Use passive listeners for better scroll performance
@@ -127,21 +119,17 @@ export function usePointerPosition(options: UsePointerPositionOptions = {}) {
     window.addEventListener('mousemove', handleMouseMove, options)
     window.addEventListener('touchmove', handleTouchMove, options)
     window.addEventListener('touchstart', handleTouchStart, options)
-    window.addEventListener('mouseenter', handleMouseEnter)
-    window.addEventListener('mouseleave', handleMouseLeave)
     
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('mouseenter', handleMouseEnter)
-      window.removeEventListener('mouseleave', handleMouseLeave)
       
       if (rafId.current !== null) {
         cancelAnimationFrame(rafId.current)
       }
     }
-  }, [handleMouseMove, handleTouchMove, handleTouchStart, handleMouseEnter, handleMouseLeave])
+  }, [handleMouseMove, handleTouchMove, handleTouchStart])
 
   return { position, isActive }
 }
